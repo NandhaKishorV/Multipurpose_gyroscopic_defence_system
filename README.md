@@ -69,6 +69,7 @@ The computer therefore receives the controller's movement and button input wirel
 ## Software
 
 - Arduino IDE
+- Python
 - ESP32 board support
 - MPU6050
 - `BleMouse` library
