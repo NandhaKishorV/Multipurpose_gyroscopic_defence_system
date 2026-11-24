@@ -1,161 +1,177 @@
 # Multipurpose Gyroscopic Defence System
 
-A motion-controlled interactive system built using an **ESP32, MPU6050 gyroscope, physical buttons, vibration feedback, and Bluetooth HID**.
+**Python-based PC control system integrated with ESP32 and MPU6050 for motion sensing and wireless interaction.** The project combines gyroscopic motion tracking, physical buttons, vibration feedback, Bluetooth HID, and Python-based PC control to create a multipurpose motion-controlled interface for PC applications and games.
 
-## Overview
+## 📌 Project Overview
 
-The system uses the MPU6050 to detect rotational movement. The ESP32 processes the gyroscope readings and uses Bluetooth HID to communicate with a computer as a wireless mouse.
+The Multipurpose Gyroscopic Defence System is a motion-based control system developed using an **ESP32** and **MPU6050 gyroscope/accelerometer**.
 
-Physical buttons provide additional input, while a vibration motor provides haptic feedback.
+The system captures hand movement through the MPU6050 and converts the detected motion into control inputs. Physical buttons provide additional user interaction, while a vibration motor provides feedback during operation.
 
-## System Architecture
+The project also includes a **Python-based PC controller** for the earlier serial-control implementation.
+
+## 🛠️ Technologies Used
+
+- **Python** – PC-side control and serial communication
+- **ESP32** – Main microcontroller
+- **MPU6050** – Gyroscope and accelerometer
+- **Bluetooth HID** – Wireless PC interaction
+- **Arduino/C++** – ESP32 firmware
+- **Serial Communication** – PC-controller interface
+- **GPIO Buttons** – User input
+- **Vibration Motor** – Haptic feedback
+
+## 🔧 Hardware Components
+
+- ESP32 development board
+- MPU6050 sensor
+- Push buttons
+- Vibration motor
+- Breadboard
+- Jumper wires
+- USB cable
+- Prototype housing
+
+## ⚙️ System Architecture
 
 ```text
-MPU6050
-   |
-   v
-ESP32
-   |
-   +---- Physical Buttons
-   |
-   +---- Vibration Feedback
-   |
-   v
-Bluetooth HID
-   |
-   v
-PC / Game
+             ┌─────────────────┐
+             │     MPU6050     │
+             │ Gyroscope + IMU │
+             └────────┬────────┘
+                      │
+                      ▼
+             ┌─────────────────┐
+             │      ESP32      │
+             │ Motion Control  │
+             └───────┬─────────┘
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+          ▼                     ▼
+   ┌─────────────┐      ┌─────────────┐
+   │   Buttons   │      │  Vibration  │
+   │ User Input  │      │  Feedback   │
+   └─────────────┘      └─────────────┘
+          │
+          ▼
+   ┌─────────────────┐
+   │ Bluetooth HID / │
+   │ Serial Interface│
+   └────────┬────────┘
+            │
+            ▼
+      ┌────────────┐
+      │     PC     │
+      │ Application│
+      │   / Game   │
+      └────────────┘
+
+Python PC Controller
+        │
+        └── Serial-based control interface
 ```
 
-## Hardware
+## 🖼️ Hardware Prototype
 
-- ESP32
-- MPU6050
-- Two push buttons
-- Vibration motor
-- Power supply
-- Custom-built controller enclosure
+### Breadboard Implementation
 
-## ESP32 Pin Configuration
+![Breadboard Prototype](Images/prototype_breadboard.jpg)
+
+### Integrated Gyroscopic System
+
+![Gyroscopic System](Images/gyroscopic_system.jpg)
+
+## 🔌 Pin Configuration
 
 | Component | ESP32 GPIO |
 |---|---:|
-| Left button | GPIO 25 |
-| Right button | GPIO 26 |
-| Vibration motor | GPIO 27 |
-| MPU6050 SDA | ESP32 SDA |
-| MPU6050 SCL | ESP32 SCL |
-| MPU6050 address | 0x68 |
+| Left Button | GPIO 25 |
+| Right Button | GPIO 26 |
+| Vibration Motor | GPIO 27 |
+| MPU6050 SDA | I²C SDA |
+| MPU6050 SCL | I²C SCL |
 
-## How It Works
+## 💻 Project Structure
 
-1. The ESP32 initializes the MPU6050.
-2. The gyroscope is configured for a ±250°/s range.
-3. The system collects 500 stationary samples for calibration.
-4. X/Y/Z gyro offsets are calculated.
-5. Raw gyro values are converted to degrees/second.
-6. A small dead zone reduces sensor noise.
-7. Gyroscope movement is mapped to mouse movement.
-8. Physical buttons are mapped to mouse clicks.
-9. The vibration motor provides feedback when a button is activated.
-10. Bluetooth HID sends the controls wirelessly to the PC.
-
-## Bluetooth HID
-
-The ESP32 uses the `BleMouse` library to present itself to the computer as a Bluetooth mouse.
-
-The computer therefore receives the controller's movement and button input wirelessly without requiring the earlier serial-to-Python control path.
-
-## Software
-
-- Arduino IDE
-- ESP32 board support
-- MPU6050
-- `BleMouse` library
-- C/C++ / Arduino
-
-## Arduino Libraries
-
-The sketch uses:
-
-```cpp
-#include <Wire.h>
-#include <BleMouse.h>
+```text
+Multipurpose_gyroscopic_defence_system/
+│
+├── ESP32/
+│   └── gyroscopic_defence_system.ino
+│
+├── Python/
+│   ├── pc_controller.py
+│   └── requirements.txt
+│
+├── Images/
+│   ├── prototype_breadboard.jpg
+│   └── gyroscopic_system.jpg
+│
+├── README.md
+└── .gitignore
 ```
 
-Install the `BleMouse` library before compiling.
+## 🚀 How It Works
 
-## Setup
+1. The **MPU6050** detects rotational movement.
+2. The **ESP32** reads and processes the sensor data.
+3. Physical buttons provide additional control inputs.
+4. The vibration motor provides haptic feedback.
+5. The processed input is transmitted to the PC through the selected control interface.
+6. The PC converts the input into application/game controls.
+7. The Python controller is included for the serial-based PC control implementation.
 
-### 1. Connect the hardware
+## 🐍 Python Component
 
-Wire the MPU6050 and buttons according to the pin configuration above.
+The `Python/` directory contains the PC-side controller used with the serial communication implementation.
 
-### 2. Open the ESP32 sketch
+Install the required Python packages using:
+
+```bash
+pip install -r requirements.txt
+```
+
+The Python controller can then be used with the corresponding serial interface and configured COM port.
+
+## 📱 ESP32 / Bluetooth HID
+
+The ESP32 implementation provides wireless HID functionality, allowing the system to interact with a PC without requiring the Python controller for the Bluetooth HID implementation.
+
+The ESP32 firmware is located at:
 
 ```text
 ESP32/gyroscopic_defence_system.ino
 ```
 
-### 3. Select your ESP32 board
+## 🎥 Project Demonstration
 
-In Arduino IDE, select the appropriate ESP32 board and the correct COM port.
+Demo video:
 
-### 4. Upload
+**Coming soon — YouTube demonstration link will be added here.**
 
-Keep the controller still during the initial calibration.
+## 📸 Project Images
 
-### 5. Pair the ESP32
+Prototype and hardware implementation images are available in the `Images/` directory.
 
-After uploading, power the ESP32 and pair the Bluetooth mouse device with the PC.
+## 🔮 Future Improvements
 
-## Demo
+- Improve motion-control accuracy and filtering
+- Add adjustable sensitivity
+- Improve wireless range and stability
+- Develop a dedicated PC configuration interface
+- Add additional programmable controls
+- Improve enclosure and ergonomics
+- Expand compatibility with more PC applications and games
 
-Add your demonstration video here:
+## 👨‍💻 Author
 
-```text
-[▶ Watch the Project Demo](YOUR_VIDEO_LINK)
-```
+**Nandha Kishor V**
 
-## Project Images
+Electronics and Communication Engineering
 
-Place your hardware and working-setup photographs inside the `Images/` folder.
+Christ University
 
-Recommended images:
+---
 
-- Complete system
-- ESP32 + MPU6050 wiring
-- Internal hardware
-- Working demonstration
-
-## Future Improvements
-
-- Advanced sensor filtering
-- Adjustable motion sensitivity
-- Improved calibration and drift compensation
-- Additional Bluetooth control mappings
-- Custom PCB
-- Improved enclosure ergonomics
-- Battery monitoring and power management
-
-## Repository Structure
-
-```text
-multipurpose-gyroscopic-defence-system/
-|
-├── ESP32/
-│   └── gyroscopic_defence_system.ino
-|
-├── Python/
-│   ├── pc_controller.py
-│   └── requirements.txt
-|
-├── Images/
-|
-├── README.md
-└── .gitignore
-```
-
-## Note
-
-The Python controller is retained as a reference for the earlier serial-control implementation. The current ESP32/Bluetooth HID implementation does not require Python for PC mouse control.
+⭐ If you find this project interesting, feel free to explore the source code and implementation.
